@@ -1,21 +1,32 @@
-from openai import OpenAI
-from dotenv import load_dotenv
 import os
+import requests
+from dotenv import load_dotenv
 
 load_dotenv()
+token = os.getenv("HF_API_TOKEN")
+if not token:
+    print("Missing Hugging Face token!")
+    exit()
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+headers = {"Authorization": f"Bearer {token}"}
+api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
 
-def chat_with_gpt(prompt):
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return response.choices[0].message.content.strip()
+print("Chatbot ready! Type 'exit' to quit.\n")
 
-if __name__ == "__main__":
-    while True:
-        user_input = input("👤: ")
-        if user_input.lower() in ["quit", "exit", "bye"]:
-            break
-        print("🤖:", chat_with_gpt(user_input))
+while True:
+    user_input = input("👤: ")
+    if user_input.lower() in ["exit", "quit"]:
+        print("Goodbye!")
+        break
+
+    payload = {"inputs": user_input}
+    response = requests.post(api_url, headers=headers, json=payload)
+
+    if response.status_code == 200:
+        output = response.json()
+        if isinstance(output, list) and "generated_text" in output[0]:
+            print("🤖:", output[0]["generated_text"].strip())
+        else:
+            print("🤖:", output)
+    else:
+        print("Error:", response.text)
