@@ -9,7 +9,7 @@ if not token:
     exit()
 
 headers = {"Authorization": f"Bearer {token}"}
-api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
+api_url = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill"
 
 print("Chatbot ready! Type 'exit' to quit.\n")
 
