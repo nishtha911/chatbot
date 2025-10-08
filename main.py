@@ -9,7 +9,7 @@ if not token:
     exit()
 
 headers = {"Authorization": f"Bearer {token}"}
-api_url = "https://huggingface.co/zai-org/GLM-4.6"
+api_url = "https://api-inference.huggingface.co/models/zai-org/GLM-4.6"
 
 print("Chatbot ready! Type 'exit' to quit.\n")
 
